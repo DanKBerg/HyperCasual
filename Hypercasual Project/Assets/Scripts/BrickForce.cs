@@ -5,6 +5,7 @@ using UnityEngine;
 public class BrickForce : MonoBehaviour
 {
     private Rigidbody rb;
+    private Vector3 spin;
 
     public Vector3 flingBrickSnyder;
 
@@ -13,6 +14,10 @@ public class BrickForce : MonoBehaviour
     {
         rb = GetComponent<Rigidbody>();
         rb.AddForce(flingBrickSnyder);
+
+        spin = new Vector3(Random.Range(0.0f, 10.0f), Random.Range(0.0f, 10.0f), Random.Range(0.0f, 10.0f));
+
+        rb.AddTorque(spin);
     }
 
     // Update is called once per frame
