@@ -25,4 +25,9 @@ public class BrickForce : MonoBehaviour
     {
         
     }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        FindObjectOfType<AudioManager>().Play("Hit");
+    }
 }

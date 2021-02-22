@@ -1,19 +1,28 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class BrickSpawner : MonoBehaviour
 {
     public GameObject brickSnyder;
-
     public Camera cam;
-
+    public int brickCount;
+    public Text brickSnyderCounter;
+    public Text finalCounter;
+    public Image brickImage;
+    public Image loseMenu;
+    
     private bool spawnBrick = true;
+    private GameObject gameMaster;
+    private GameMaster GM;
+    private bool gameEnded = false;
 
     // Start is called before the first frame update
     void Start()
     {
-
+        gameMaster = GameObject.Find("GameMaster");
+        GM = gameMaster.GetComponent<GameMaster>();
     }
 
     // Update is called once per frame
@@ -32,20 +41,41 @@ public class BrickSpawner : MonoBehaviour
             transform.position = touchPosition;
 
             //If the touch has started and you can spawn a brick
-            if (touch.phase == TouchPhase.Began)
+            if (touch.phase == TouchPhase.Began && brickCount > 0 && (GM.win == false && gameEnded == false))
             {
                 //Spawns a brick
                 Instantiate(brickSnyder, transform.position, transform.rotation);
 
-                spawnBrick = false;
-            }
+                FindObjectOfType<AudioManager>().Play("Fling");
 
-            //If the touch ends...
-            if (touch.phase == TouchPhase.Ended)
-            {
-                //...spawnBrick will be set to true.
-                spawnBrick = true;
+                spawnBrick = false;
+                brickCount -= 1;
+                Debug.Log(brickCount);
             }
+        }
+
+        if(brickCount == 0 && GM.win == false)
+        {
+            Debug.Log("You Lose!");
+            gameEnded = true;
+        }
+
+        if (GM.win == true || gameEnded == true)
+        {
+            brickSnyderCounter.gameObject.SetActive(false);
+            brickImage.gameObject.SetActive(false);
+        }
+
+        brickSnyderCounter.text = brickCount.ToString();
+        finalCounter.text = brickCount.ToString();
+
+        if(GM.win == false && gameEnded == true)
+        {
+            loseMenu.gameObject.SetActive(true);
+        }
+        else
+        {
+            loseMenu.gameObject.SetActive(false);
         }
     }
 }
